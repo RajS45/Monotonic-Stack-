@@ -1,0 +1,66 @@
+# Next Greater Number
+
+- Brute Force.
+
+import java.util.*;
+class Solution {
+    public int[] nextLargerElement(int[] arr) {
+        int n = arr.length;
+        int[] ans = new int[n];
+        Arrays.fill(ans, -1);
+
+        for (int i = 0; i < n; i++) {
+            int currEle = arr[i];
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] > currEle) {
+                    ans[i] = arr[j];
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        int n = 4;
+        int[] arr = {1, 3, 2, 4};
+        Solution sol = new Solution();
+        int[] ans = sol.nextLargerElement(arr);
+        for (int i = 0; i < n; i++) {
+            System.out.print(ans[i] + " ");
+        }
+    }
+
+- Optimal Apporach.
+
+import java.util.*;
+class Solution {
+    public int[] nextLargerElement(int[] nums) {
+        int n = nums.length;
+        int[] nge = new int[n];
+        Stack<Integer> st = new Stack<>();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.isEmpty() && st.peek() <= nums[i]) {
+                st.pop();
+            }
+            if(st.isEmpty()){
+                nge[i]= -1;
+            }
+            else{
+                nge[i] = st.peek();
+            }
+            st.push(nums[i]);
+        }
+        return nge;
+    }
+    public static void main(String [] args){
+        int []arr = {2,3,42,4,31,34,12345,5,4,234};
+        int n=arr.length;
+        Solution sol = new Solution();
+        int []r = sol.nextLargerElement(arr);
+        for(int i=0;i<r.length;i++){
+            System.out.println(r[i]);
+        }
+    }
+}
+}
