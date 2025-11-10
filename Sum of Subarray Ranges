@@ -1,0 +1,97 @@
+-->> Sum of Subarray Ranges
+
+> Brute Force
+class Solution {
+    public long subArrayRanges(int[] nums) {
+        int n = nums.length;
+        long total = 0;
+        for (int i = 0; i < n; i++) {
+            int mini = nums[i];
+            int maxi = nums[i];
+            for (int j = i; j < n; j++) {
+                mini = Math.min(mini, nums[j]);
+                maxi = Math.max(maxi, nums[j]);
+                total += (maxi - mini);
+            }
+        }
+        return total;
+    }
+}
+
+> Optimal Appraoch
+import java.util.*;
+class Solution {
+    private int[] findNextSmaller(int[] arr) {
+        int n = arr.length;
+        int[] ans = new int[n];
+        Stack<Integer> st = new Stack<>();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.isEmpty() && arr[st.peek()] >= arr[i]) st.pop();
+            ans[i] = st.isEmpty() ? n : st.peek();
+            st.push(i);
+        }
+        return ans;
+    }
+    private int[] findNextGreater(int[] arr) {
+        int n = arr.length;
+        int[] ans = new int[n];
+        Stack<Integer> st = new Stack<>();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.isEmpty() && arr[st.peek()] <= arr[i]) st.pop();
+            ans[i] = st.isEmpty() ? n : st.peek();
+            st.push(i);
+        }
+        return ans;
+    }
+    private int[] findPrevSmallerOrEqual(int[] arr) {
+        int n = arr.length;
+        int[] ans = new int[n];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!st.isEmpty() && arr[st.peek()] > arr[i]) st.pop();
+            ans[i] = st.isEmpty() ? -1 : st.peek();
+            st.push(i);
+        }
+        return ans;
+    }
+    private int[] findPrevGreaterOrEqual(int[] arr) {
+        int n = arr.length;
+        int[] ans = new int[n];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!st.isEmpty() && arr[st.peek()] < arr[i]) st.pop();
+            ans[i] = st.isEmpty() ? -1 : st.peek();
+            st.push(i);
+        }
+        return ans;
+    }
+    private long sumSubarrayMins(int[] arr) {
+        int[] next = findNextSmaller(arr);
+        int[] prev = findPrevSmallerOrEqual(arr);
+        long sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            long count = (long)(i - prev[i]) * (next[i] - i);
+            sum += count * arr[i];
+        }
+        return sum;
+    }
+    private long sumSubarrayMaxs(int[] arr) {
+        int[] next = findNextGreater(arr);
+        int[] prev = findPrevGreaterOrEqual(arr);
+        long sum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            long count = (long)(i - prev[i]) * (next[i] - i);
+            sum += count * arr[i];
+        }
+        return sum;
+    }
+    public long subArrayRanges(int[] arr) {
+        return sumSubarrayMaxs(arr) - sumSubarrayMins(arr);
+    }
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3};
+        Solution sol = new Solution();
+        long ans = sol.subArrayRanges(arr);
+        System.out.println("The sum of subarray ranges is: " + ans);
+    }
+}
