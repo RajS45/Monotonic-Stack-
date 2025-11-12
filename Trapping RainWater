@@ -1,0 +1,36 @@
+-->> Trapping RainWater.
+Brute Force
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int total = 0;
+        int[] leftMax = findPrefixMax(height, n);
+        int[] rightMax = findSuffixMax(height, n);
+        for (int i = 0; i < n; i++) {
+            total += Math.min(leftMax[i], rightMax[i]) - height[i];
+        }
+        return total;
+    }
+    public int[] findPrefixMax(int[] nums, int n) {
+        int[] prefixMax = new int[n];
+        prefixMax[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            prefixMax[i] = Math.max(prefixMax[i - 1], nums[i]);
+        }
+        return prefixMax;
+    }
+    public int[] findSuffixMax(int[] nums, int n) {
+        int[] suffixMax = new int[n];
+        suffixMax[n - 1] = nums[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            suffixMax[i] = Math.max(suffixMax[i + 1], nums[i]);
+        }
+        return suffixMax;
+    }
+    public static void main(String []args){
+        int []nums1 = {12,3232,12,123,1,0,3};
+        Solution sol = new Solution();
+        int res = sol.trap(nums1);
+        System.out.println(res);
+    }
+}
