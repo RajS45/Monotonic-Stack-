@@ -3,7 +3,7 @@ A monotonic stack is a stack that maintains its elements in either increasing or
 - Monotonic Increasing Stack: Top of the stack is the smallest; elements increase as you go down.
 - Monotonic Decreasing Stack: Top of the stack is the largest; elements decrease as you go down.
 
-🧠 Core Idea
+🧠 Core Idea.
 As you iterate through the array:
 - You pop elements from the stack that don’t satisfy the monotonic condition.
 - You push the current element (or its index) to maintain the order.
